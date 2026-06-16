@@ -1,0 +1,34 @@
+name: Enviar Focus
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      # Dispara quando um resumo HTML novo é commitado.
+      - "output/focus/focus_*.html"
+  workflow_dispatch:
+
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Enviar o resumo por e-mail
+        env:
+          # Credenciais vêm dos Secrets do repositório — nunca do código.
+          FOCUS_SMTP_USER: ${{ secrets.FOCUS_SMTP_USER }}
+          FOCUS_SMTP_APP_PASSWORD: ${{ secrets.FOCUS_SMTP_APP_PASSWORD }}
+          FOCUS_EMAIL_DEST: ${{ secrets.FOCUS_EMAIL_DEST }}
+          FOCUS_EMAIL_BCC: ${{ secrets.FOCUS_EMAIL_BCC }}
+        run: python src/enviar_email.py

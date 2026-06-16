@@ -1,0 +1,7 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+.env
+
+# Obs.: output/focus/ É versionado (os resumos ficam no repositório).
